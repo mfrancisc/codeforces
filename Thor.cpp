@@ -1,68 +1,57 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <vector>
+#include <list>
 
 using namespace std;
 
-struct event {
-    long int type;
-    long int app;
-};
+#define MAXN 300100
 
 int main(){
-    //ifstream cin("thor.in");
+   //ifstream cin("thor.in");
 
-    long int n,q;
+    int n,q;
     cin>>n>>q;
-    long int apps[n];
+    list<int> apps[MAXN];
 
-    vector<event> events;
-    fill(apps, apps + n, 0);
+    bool readed[MAXN];
 
-    int a,b, noti;
-    long int  totNot;
+    int a,b;
+    int  totNot, mx = 0;
     totNot = 0;
+    int event = 0;
     for(int i = 0; i < q; i++){
         cin>>a>>b;
-        noti = 0;
-
-        event eventObj;
-        eventObj.type = a;
-        eventObj.app = b;
-        events.push_back(eventObj);
 
         if(a == 1) {
-            apps[b-1]++; totNot++;
+            apps[b].push_back(++event);
+            totNot++;
         }
         else if(a == 2){ 
 
-            //cout << b << endl;
-            //cout << b - 1 << endl;
-            noti = apps[b-1]; 
-            //cout << noti << endl;
-            apps[b-1]=0; totNot -= noti;
+            while(!apps[b].empty()){
+                if(!readed[apps[b].back()]){
+                    readed[apps[b].back()] = true; 
+                    totNot--;
+                }
+                apps[b].pop_back();
+            }
+
         }
         else if(a == 3) {
-            for(int z = 0; z < b;z++){
-                event e = events[z];
-
-                int app = e.app;
-
-                //cout << z << endl;
-                //cout << app << endl;
-                
-                if(apps[app-1] > 0){
-                apps[app-1]--;
-                totNot--;
+            while(mx<b){
+				++mx;
+                if(!readed[mx]){
+                    readed[mx] = true; 
+                    totNot--;
                 }
-            } 
-        }
+            }
+        } 
 
-        cout << totNot << endl;
-
+    cout << totNot << endl;
     }
 
-    return 0;
+
+return 0;
 }
 
